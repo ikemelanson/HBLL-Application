@@ -1,0 +1,427 @@
+<!-- Ike Melanson HBLL Application -->
+<!-- webpage with four accordion drop-downs. One to reverse a string,-->
+<!-- one to choose the largest of three ints, one to calculate a factorial -->
+<!-- and one to calculate the nth entry of the fibonachi sequence -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ike Melanson HBLL Application</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+            new Vue({
+                el: "#app",
+                data: {
+                    // variables for storing displayed values
+                    reverseStringOutput: "",
+
+                    largestIntegerOutput: "",
+
+                    factorialOutput: "",
+
+                    fibonachiOutput: ""
+
+                },
+
+                methods: {
+                    // open accordion function
+                    openAcc(id) {
+
+                        // get which accordion was clicked, along with the panel and + sign
+                        let accordion = document.getElementById("acc-" + id);
+                        let panel = document.getElementById("panel-" + id);
+                        let accordionPlus = document.getElementById("plus-" + id)
+
+                        // controls opening and closing accordions, and +- sign
+                        if (accordionPlus.innerHTML == "+") {
+                            accordionPlus.innerHTML = "&#8722;";
+                            panel.style.maxHeight = panel.scrollHeight + "px";
+                        }
+                        else {
+                            accordionPlus.innerHTML = "+";
+                            panel.style.maxHeight = null;
+                        }
+                    },
+
+                    reverseString() {
+                        let old = document.getElementById("reverseText").value;
+                        let newString = "";
+
+                        // take characters from the old string and add them to the front of the new string
+                        for (count = 0; count < old.length; count++) {
+                            newString = old.charAt(count) + newString;
+                        }
+
+                        this.reverseStringOutput = newString;
+                    },
+
+                    largestInteger() {
+                        let integers = [];
+
+                        // add all the inputs to an array
+                        for (count = 1; count < 4; count++) {
+                            integers.push(document.getElementById("integer-" + count).value);
+                        }
+
+                        // if any of the inputs are empty
+                        if (integers.includes("")) {
+                            this.largestIntegerOutput = "Missing integers"
+                        }
+
+                        // sort the array
+                        else {
+                            integers.sort();
+
+                            // grab the last array element (largest)
+                            this.largestIntegerOutput = integers[2];
+                        }
+                    },
+
+                    factorial() {
+                        let chosenNumber = parseInt(document.getElementById("factorial-input").value);
+                        let finalNumber = 1;
+
+                        // if the number is smaller than 1
+                        if (chosenNumber < 2) {
+                            this.factorialOutput = "Must be larger than 1";
+                        }
+
+                        else {
+
+                            // starting with the inputed number, count down and multiply
+                            for (count = chosenNumber; count > 1; count--) {
+                                finalNumber = finalNumber * count;
+                            }
+
+                            this.factorialOutput = finalNumber;
+                        }
+
+                    },
+
+                    fibonachi() {
+                        // get input an initiate values
+                        let chosenAmount = document.getElementById("fibonachi-input").value;
+                        let finalAnswer = 1;
+                        let prevNumber = 0
+
+                        // input must be larger than 0
+                        if (chosenAmount < 0) {
+                            this.fibonachiOutput = "Must be larger than 0"
+                        }
+
+                        else {
+
+                            // loop through user's chosen number of times -1
+                            for (count = 1; count < chosenAmount; count++) {
+
+                                // add the last number and the one before it (prevNumber), set the
+                                // prevNumber to the new finalAnswer minus the number (in the sequence) before it
+                                finalAnswer = prevNumber + finalAnswer;
+                                prevNumber = finalAnswer - prevNumber;
+
+                            }
+
+                            this.fibonachiOutput = finalAnswer;
+                        }
+
+                    }
+
+                },
+
+                created() {
+                },
+
+                destroyed() {
+                },
+
+                mounted() {
+                },
+            })
+        })
+    </script>
+
+    <!-- import fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source%20Sans%20Pro:ExtraLight, Semibold">
+    <!-- general styling -->
+    <style>
+        .full-page {
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .content {
+            width: 50%;
+            max-width: 750px;
+            margin: 10% 0%;
+        }
+
+        .accordion-cont {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .accordion-box {
+            width: calc(100% - 2px);
+            margin: 9px 0px;
+        }
+
+        .accordion-face {
+            font-family: "Source Sans Pro", Helvetica, sans-serif;;
+            font-weight: 600;
+            font-size: 20px;
+            width: 100%;
+            padding: 13px 15px;
+            border: solid 1px #C4C4C4;
+            border-radius: 3px;
+            box-shadow: 0px 3px 7px -3px #888888;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: white;
+        }
+
+        :hover.accordion-face {
+            background-color: #0000000c;
+        }
+
+        .accordion-face-text {
+            text-align: left;
+        }
+
+        .accordion-face-plus {
+            padding-left: 15px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 400;
+            font-size: 30px;
+            color: #2E4481;
+        }
+
+        .panel {
+            font-family: "Source Sans Pro", Helvetica, sans-serif;;
+            font-weight: 400;
+            font-size: 15px;
+            color: #1D1D1D;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out;
+            width: 97%;
+            margin: auto;
+            border-bottom-left-radius: 3px;
+            border-bottom-right-radius: 3px;
+            border-bottom: solid 1px #C4C4C4;
+            border-left: solid 1px #C4C4C4;
+            border-right: solid 1px #C4C4C4;
+        }
+
+        .panel-cont {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 13px 15px;
+        }
+
+        .panel-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .input {
+            margin: 0px 7px;
+            display: flex;
+        }
+
+        .number-input {
+            width: 40px;
+            margin: 0px 3px;
+        }
+
+        .calculate-button {
+            background-color: white;
+            border: solid 1px #C4C4C4;
+            border-radius: 3px;
+            padding: 5px 8px;
+        }
+
+        :hover.calculate-button {
+            background-color: #0000000c;
+        }
+
+        .output {
+            margin: 0px 7px;
+            word-wrap: break-word;
+        }
+
+        .faq {
+            font-family: "Source Sans Pro", Helvetica, sans-serif;;
+            font-weight: 100;
+            font-size: 50px;
+        }
+
+        .split-line {
+            border-bottom: solid 1px #C4C4C4;
+            margin: 15px 0px;
+        }
+
+        /* small laptop styles */
+        @media only screen and (max-width:1200px) {
+
+            .content {
+                width: 60%;
+                margin: 10% 0%;
+            }
+
+        }
+
+        /* tablet styles */
+        @media only screen and (max-width:850px) {
+
+            .content {
+                width: 75%;
+                margin: 15% 0%;
+            }
+
+        }
+
+        /* mobile styles */
+        @media only screen and (max-width:700px) {
+
+            .content {
+                width: 90%;
+                margin: 20% 0%;
+            }
+
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="app" class="full-page">
+
+        <!-- center div -->
+        <div class="content">
+
+            <div class="faq">FAQs</div>
+
+            <div class="split-line"></div>
+
+            <!-- accordions 1-4 -->
+            <div class="accordion-cont">
+
+                <!--accordion 1  reverse string-->
+                <div class="accordion-box">
+                    <button class="accordion-face" id="acc-1" @click="openAcc(1)">
+                        <div class="accordion-face-text">Reverse a string</div>
+                        <div class="accordion-face-plus" id="plus-1">+</div>
+                    </button>
+                    <div class="panel" id="panel-1">
+                        <div class="panel-cont">
+                            <div class="panel-left">
+                                <!-- reverse string input -->
+                                <div class="panel-exp">Input a string here: </div>
+                                <div class="input">
+                                    <input type="text" id="reverseText" placeholder="ex. cheese">
+                                </div>
+                                <button @click="reverseString()" class="calculate-button">Calculate</button>
+                            </div>
+                            <!-- reversed string output -->
+                            <div class="panl-right">
+                                <div class="output">{{reverseStringOutput}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- accordion 2 largest int-->
+                <div class="accordion-box">
+                    <button class="accordion-face" id="acc-2" @click="openAcc(2)">
+                        <div class="accordion-face-text">Choose the largest of three integers</div>
+                        <div class="accordion-face-plus" id="plus-2">+</div>
+                    </button>
+                    <div class="panel" id="panel-2">
+                        <div class="panel-cont">
+                            <div class="panel-left">
+                                <div class="panel-exp">Input three integers here:</div>
+                                <!-- largest int inputs -->
+                                <div class="input">
+                                    <input type="number" class="number-input" placeholder="6" id="integer-1">
+                                    <input type="number" class="number-input" placeholder="9" id="integer-2">
+                                    <input type="number" class="number-input" placeholder="2" id="integer-3">
+                                </div>
+                                <button @click="largestInteger()" class="calculate-button">Calculate</button>
+                            </div>
+                            <!-- largest int output -->
+                            <div class="panel-right">
+                                <div class="output">{{largestIntegerOutput}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- accordion 3 calc factorial -->
+                <div class="accordion-box">
+                    <button class="accordion-face" id="acc-3" @click="openAcc(3)">
+                        <div class="accordion-face-text">Calculate a factorial</div>
+                        <div class="accordion-face-plus" id="plus-3">+</div>
+                    </button>
+                    <div class="panel" id="panel-3">
+                        <div class="panel-cont">
+                            <div class="panel-left">
+                                <!-- factorial input -->
+                                <div class="panel-exp">Input an integer here:</div>
+                                <div class="input">
+                                    <input type="number" class="number-input" id="factorial-input" placeholder="5"
+                                        min="1">
+                                </div>
+                                <button @click="factorial()" class="calculate-button">Calculate</button>
+                            </div>
+                            <!-- factorial output -->
+                            <div class="panel-right">
+                                <div class="output">{{factorialOutput}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- accordion 4 fibonachi sequence-->
+                <div class="accordion-box">
+                    <button class="accordion-face" id="acc-4" @click="openAcc(4)">
+                        <div class="accordion-face-text">Calculate the Nth entry of the Fibonachi sequence</div>
+                        <div class="accordion-face-plus" id="plus-4">+</div>
+                    </button>
+                    <div class="panel" id="panel-4">
+                        <div class="panel-cont">
+                            <div class="panel-left">
+                                <!-- fibonachi sequence input -->
+                                <div class="panel-exp">Input an integer here:</div>
+                                <div class="input">
+                                    <input type="number" class="number-input" id="fibonachi-input" placeholder="8"
+                                        min="1">
+                                </div>
+                                <button @click="fibonachi()" class="calculate-button">Calculate</button>
+                            </div>
+                            <!-- fibonachi sequence output -->
+                            <div class="panel-right">
+                                <div class="output">{{fibonachiOutput}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</body>
+
+</html>
